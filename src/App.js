@@ -34,10 +34,7 @@ const App = () => {
             path="dashboard"
             element={<PrivateRoute component={Dashboard} />}
           />
-          <Route
-            path="create-task"
-            element={<PrivateRoute component={CreateTask} />}
-          />
+         
           <Route exact path="/register" Component={Register} />
           <Route exact path="/login" Component={Login} />
         </Routes>
