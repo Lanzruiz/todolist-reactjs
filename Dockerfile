@@ -5,7 +5,7 @@ FROM node:18-alpine
 EXPOSE 3000
 # Copies index.js and the two package files from the local 
 # directory to a new app directory on the container
-COPY . dist/ public/ src/  app/
+COPY . public/ src/  app/
 # Changes working directory to the new directory just created
 WORKDIR /app
 # Installs npm dependencies on container
