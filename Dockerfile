@@ -1,23 +1,29 @@
+# ---------- BUILD STAGE ----------
 FROM node:18-alpine AS build
 
 WORKDIR /app
 
-# Copy only package.json first (cache optimization)
-COPY package.json ./
+# Copy package.json & yarn.lock first (for caching)
+COPY package.json yarn.lock ./
 
-# Install dependencies
-RUN npm install
+# Install dependencies using Yarn
+RUN yarn install
 
-# Copy the rest of the code
+# Copy app source
 COPY . .
 
-# Build project
-RUN npm run build
+# Build the React app
+RUN yarn build
 
-# Serve with Nginx
+
+# ---------- PRODUCTION STAGE ----------
 FROM nginx:alpine
 
+# Copy built files from the build stage
 COPY --from=build /app/build /usr/share/nginx/html
 
-EXPOSE 80
+# Expose port 80 for Nginx
+EXPOSE 3000
+
+# Run Nginx
 CMD ["nginx", "-g", "daemon off;"]
