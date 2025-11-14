@@ -1,24 +1,23 @@
-# ---------- BUILD STAGE ----------
 FROM node:18-alpine AS build
 
 WORKDIR /app
 
-# Copy package.json and install dependencies
-COPY package*.json ./
+# Copy only package.json first (cache optimization)
+COPY package.json ./
+
+# Install dependencies
 RUN npm install
 
-# Copy app source and build
+# Copy the rest of the code
 COPY . .
+
+# Build project
 RUN npm run build
 
-# ---------- PRODUCTION STAGE ----------
+# Serve with Nginx
 FROM nginx:alpine
 
-# Copy build output to Nginx html folder
 COPY --from=build /app/build /usr/share/nginx/html
 
-# Expose port 3000
-EXPOSE 3000
-
-# Start Nginx
+EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
