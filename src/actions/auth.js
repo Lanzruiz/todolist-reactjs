@@ -22,6 +22,7 @@ export const loadUser = () => async (dispatch) => {
     const res = await axios.get("/api/auth", {
       withCredentials: true,
     });
+    console.log("called by auth actions", res);
     dispatch({
       type: USER_LOADED,
       payload: res.data,
