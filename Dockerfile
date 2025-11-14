@@ -1,32 +1,24 @@
-# Stage 1: Build the React application
-FROM node:20-alpine as builder
+FROM node:6.9
 
-# Set the working directory inside the container
-WORKDIR /app
+# Create app directory
+RUN mkdir -p /src/app
+WORKDIR /src/app
 
-# Copy package.json and package-lock.json (if present)
-COPY package.json ./
+# to make npm test run only once non-interactively
+ENV CI=true
 
-# Install dependencies
-RUN npm install
+# Install app dependencies
+COPY package.json /src/app/
+RUN npm install && \
+    npm install -g pushstate-server
 
-# Copy the rest of the application code
-COPY . .
+# Bundle app source
+COPY . /src/app
 
-# Build the React application for production
+# Build and optimize react app
 RUN npm run build
 
-# Stage 2: Serve the built application with Nginx
-FROM nginx:alpine
+EXPOSE 9000
 
-# Copy the built React app from the builder stage to Nginx's html directory
-COPY --from=builder /app/build /usr/share/nginx/html
-
-# Optional: Copy a custom Nginx configuration if needed
-# COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port 80 for Nginx
-EXPOSE 3000
-
-# Start Nginx
-CMD ["nginx", "-g", "daemon off;"]
+# defined in package.json
+CMD [ "npm", "run", "start:prod" ]
