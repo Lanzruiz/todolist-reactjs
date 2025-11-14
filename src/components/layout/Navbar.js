@@ -3,12 +3,16 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
+import auth from "../../reducers/auth";
 
 const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const authLinks = (
     <ul>
       <li>
-        <Link to="/create-task">Create A Task</Link>
+        <Link to="/profiles">Developers</Link>
+      </li>
+      <li>
+        <Link to="/posts">Posts</Link>
       </li>
       <li>
         <Link to="/dashboard">
@@ -28,6 +32,9 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
   const guestLinks = (
     <ul>
       <li>
+        <Link to="/profiles">Developers</Link>
+      </li>
+      <li>
         <Link to="/register">Register</Link>
       </li>
       <li>
@@ -40,7 +47,7 @@ const Navbar = ({ auth: { isAuthenticated, loading }, logout }) => {
       <nav className="navbar bg-dark">
         <h1>
           <Link to="/">
-            <i className="fas fa-code"></i> TaskManage
+            <i className="fas fa-code"></i> DevConnector
           </Link>
         </h1>
         <Fragment>{isAuthenticated ? authLinks : guestLinks}</Fragment>

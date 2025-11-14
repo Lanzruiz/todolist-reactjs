@@ -15,7 +15,7 @@ const initialState = {
   user: null,
 };
 
-export default async function (state = initialState, action) {
+export default function (state = initialState, action) {
   const { type, payload } = action;
   switch (type) {
     case USER_LOADED:
@@ -27,7 +27,7 @@ export default async function (state = initialState, action) {
       };
     case REGISTER_SUCCESS:
     case LOGIN_SUCCESS:
-      await localStorage.setItem("token", payload.token);
+      localStorage.setItem("token", payload.token);
       return {
         ...state,
         ...payload,
@@ -39,7 +39,7 @@ export default async function (state = initialState, action) {
     case AUTH_ERROR:
     case LOGIN_FAIL:
     case LOGOUT:
-      await localStorage.removeItem("token");
+      localStorage.removeItem("token");
       return { ...state, token: null, isAuthenticated: false, loading: false };
     default:
       return state;

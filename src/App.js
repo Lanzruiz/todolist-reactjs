@@ -4,7 +4,6 @@ import Landing from "./components/layout/Landing";
 import Register from "./components/auth/Register";
 import Login from "./components/auth/Login";
 import Dashboard from "./components/layout/Dashboard/Dashboard";
-import CreateTask from "./components/layout/CreateTask/create-task";
 import Alert from "./components/layout/Alert";
 import { Routes, Route, Switch } from "react-router-dom";
 import { loadUser } from "./actions/auth";
@@ -34,7 +33,6 @@ const App = () => {
             path="dashboard"
             element={<PrivateRoute component={Dashboard} />}
           />
-         
           <Route exact path="/register" Component={Register} />
           <Route exact path="/login" Component={Login} />
         </Routes>
