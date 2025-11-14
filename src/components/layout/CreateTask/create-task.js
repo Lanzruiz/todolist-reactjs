@@ -1,13 +1,12 @@
 import React, { Fragment } from "react";
 import { Link, Navigate } from "react-router-dom";
 
-const Dashboard = () => {
+const CreateTask = () => {
   return (
     <Fragment>
       <section className="container">
-        <h1 className="large text-primary">Dashboard</h1>
         <p className="lead">
-          <i className="fas fa-user"></i> Welcome John Doe
+          <i className="fas fa-user"></i> Create your Task
         </p>
 
         <h2 className="my-2">Task List</h2>
@@ -44,4 +43,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default CreateTask;
