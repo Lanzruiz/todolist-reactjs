@@ -1,24 +1,24 @@
-FROM node:6.9
+# ---------- BUILD STAGE ----------
+FROM node:18-alpine AS build
 
-# Create app directory
-RUN mkdir -p /src/app
-WORKDIR /src/app
+WORKDIR /app
 
-# to make npm test run only once non-interactively
-ENV CI=true
+# Copy package.json and install dependencies
+COPY package*.json ./
+RUN npm install
 
-# Install app dependencies
-COPY package.json /src/app/
-RUN npm install && \
-    npm install -g pushstate-server
-
-# Bundle app source
-COPY . /src/app
-
-# Build and optimize react app
+# Copy app source and build
+COPY . .
 RUN npm run build
 
-EXPOSE 9000
+# ---------- PRODUCTION STAGE ----------
+FROM nginx:alpine
 
-# defined in package.json
-CMD [ "npm", "run", "start:prod" ]
+# Copy build output to Nginx html folder
+COPY --from=build /app/build /usr/share/nginx/html
+
+# Expose port 3000
+EXPOSE 3000
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
