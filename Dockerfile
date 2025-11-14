@@ -1,16 +1,33 @@
-# Uses the node base image with the latest LTS version
-FROM node:18-alpine
-# Informs Docker that the container listens on the 
-# specified network ports at runtime
-EXPOSE 3000
-# Copies index.js and the two package files from the local 
-# directory to a new app directory on the container
-COPY . public/ src/  app/
-# Changes working directory to the new directory just created
+# Stage 1: Build the React application
+FROM node:20-alpine as builder
+
+# Set the working directory inside the container
 WORKDIR /app
-# Installs npm dependencies on container
+
+# Copy package.json and package-lock.json (if present)
+COPY package.json ./
+COPY package-lock.json ./
+
+# Install dependencies
 RUN npm install
 
+# Copy the rest of the application code
+COPY . .
+
+# Build the React application for production
 RUN npm run build
-# Command container will actually run when called
-CMD [ "npm", "start" ]
+
+# Stage 2: Serve the built application with Nginx
+FROM nginx:alpine
+
+# Copy the built React app from the builder stage to Nginx's html directory
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Optional: Copy a custom Nginx configuration if needed
+# COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Expose port 80 for Nginx
+EXPOSE 3000
+
+# Start Nginx
+CMD ["nginx", "-g", "daemon off;"]
